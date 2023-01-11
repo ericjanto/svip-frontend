@@ -1,6 +1,10 @@
 import Head from 'next/head'
 
-export default function HomePage() {
+import Searcher from '../components/Searcher'
+
+export default function SearchPage() {
+  // Query passed via URL
+  const query = ''
   return (
     <>
       <Head>
@@ -10,7 +14,11 @@ export default function HomePage() {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
       <main>
-        <div>Home page. This will probably only show an input field, not much more.</div>
+        <div>
+          Search Page. This is where results will be displayed.
+          If no query in URL direct back to index page.
+        </div>
+        <Searcher query={query} />
       </main>
     </>
   )
