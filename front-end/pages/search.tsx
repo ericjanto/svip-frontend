@@ -1,25 +1,27 @@
-import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
-import Searcher from '../components/Searcher'
+import ResultPage from '../components/ResultPage'
 
 export default function SearchPage() {
-  // Query passed via URL
-  const query = ''
-  return (
-    <>
-      <Head>
-        <title>TTDS Search Engine</title>
-        <meta name="description" content="TTDS Search Engine" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* <link rel="icon" href="/favicon.ico" /> */}
-      </Head>
-      <main>
-        <div>
-          Search Page. This is where results will be displayed.
-          If no query in URL direct back to index page.
-        </div>
-        <Searcher query={query} />
-      </main>
-    </>
-  )
+  const router = useRouter()
+  const query = router.query.query
+
+  const [cnt, setCnt] = useState(2)
+
+
+  // TODO: this doesn't work yet, pre-render state is different
+  // if (!router.query.query) {
+  //   console.log("push back to home page")
+  //   router.push('/')
+  // } else {
+    const pages = []
+    for (let i = 0; i < cnt; i++) {
+      pages.push(<ResultPage query={query} pageIndex={i} key={i} />)
+    }
+  
+    return <div>
+      {pages}
+      <button onClick={() => setCnt(cnt + 1)}>Load More</button>
+    </div>
 }
