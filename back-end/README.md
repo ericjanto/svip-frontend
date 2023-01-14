@@ -1,9 +1,9 @@
 ## Back-End Requirements (Front-End Integration)
-1. The back-end must expose an HTTP GET endpoint, accepting URI-encoded:
+1. The back-end must expose an HTTP GET endpoint, accepting a URI-encoded query parameter:
 ```
 GET url.com/query?=this%20is%20query%20text
 ```
-2. An API call to the back-end must return `JSON`-structured data:
+2. An API-call to the back-end must return `JSON`-structured data:
 
 ```json
 [
