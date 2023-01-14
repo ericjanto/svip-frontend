@@ -20,4 +20,4 @@ GET url.com/query?=this%20is%20query%20text
 GET url.com/query?=...&page=1&limit=15
 ```
 
-If `limit` goes beyond items available on the last page, the endpoint must return the maximum amount of available items.
+If `limit` goes beyond items available on the last page, the endpoint must return the maximum amount of available items for that page.
