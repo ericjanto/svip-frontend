@@ -10,4 +10,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Mock API
 
-A mock API is set up [here](https://63be76d1e348cb07620f5001.mockapi.io/api/mock/results).
+A mock API is set up [here](https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents).
