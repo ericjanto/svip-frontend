@@ -13,7 +13,7 @@ soup = BeautifulSoup(response.content, 'html.parser')
 # Find all the story links on the page
 story_links = soup.find_all('a', class_='work')
 
-# Loop through each story link and retrieve the content, story ID, and chapter IDs
+# Loop through each story link and retrieve the content, story ID, chapter IDs, and tags
 for link in story_links:
     # Get the story ID from the URL
     story_id = link.get('href').split('/')[-1]
@@ -29,7 +29,13 @@ for link in story_links:
     chapter_links = story_soup.find_all('li', class_='chapter')
     chapter_ids = [link.find('a').get('href').split('/')[-1] for link in chapter_links]
     
-    # Print the story ID, chapter IDs, and content
+    # Find the tags of the story
+    tag_links = story_soup.find_all('li', class_='tag')
+    tags = [link.find('a').get_text() for link in tag_links]
+    
+    # Print the story ID, chapter IDs, content, and tags
     print("Story ID:", story_id)
     print("Chapter IDs:", chapter_ids)
     print("Content:", story_content)
+    print("Tags:", tags)
+
