@@ -2,12 +2,30 @@ import requests
 from bs4 import BeautifulSoup
 
 # Define the base URL of the Harry Potter fandom page on AO3
-base_url = "https://archiveofourown.org/tags/Harry%20Potter%20-%20J*d*%20K*d*%20Rowling/works?page="
+base_url = "https://archiveofourown.org/tags/Harry%20Potter%20-%20J*d*%20K*d*%20Rowling/works"
+
+# Send a GET request to the base URL and parse the HTML content with Beautiful Soup
+response = requests.get(base_url)
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# Find the total number of works in the Harry Potter fandom
+total_works = int(soup.find('h2', class_='heading').find('a').get_text().replace(',', '').split()[-1])
+
+# Find the number of pages from the navigation bar at the bottom of the page
+navigation = soup.find('ol', class_='pagination actions')
+if navigation is not None:
+    pages = navigation.find_all('li')
+    if len(pages) > 1:
+        total_pages = int(pages[-2].get_text())
+    else:
+        total_pages = 1
+else:
+    total_pages = 1
 
 # Loop through all the pages of works in the Harry Potter fandom on AO3
-for page_num in range(1, 7001):
+for page_num in range(1, total_pages + 1):
     # Construct the URL of the current page
-    url = base_url + str(page_num)
+    url = base_url + "?page=" + str(page_num)
     
     # Send a GET request to the URL
     response = requests.get(url)
