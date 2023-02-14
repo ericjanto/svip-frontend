@@ -13,6 +13,9 @@ soup = BeautifulSoup(page, 'html.parser')
 # Find the second-to-last item in the list of pages in the navigation bar
 num_pages = int(soup.find(class_='pagination').find_all('li')[-2].get_text())
 
+# Dictionary to store the results for each unique story
+results = {}
+
 # Iterate over each page of stories
 for page_num in range(1, num_pages + 1):
 
@@ -37,6 +40,7 @@ for page_num in range(1, num_pages + 1):
 
         # Retrieve the content of each chapter in the story
         content = ''
+        chapter_ids = []
         for chapter_link in story.find_all(class_='chapter index group'):
             chapter_id = chapter_link['id'].split('_')[-1]
             chapter_url = 'https://archiveofourown.org' + chapter_link.find('a')['href']
@@ -45,6 +49,7 @@ for page_num in range(1, num_pages + 1):
             chapter_content = chapter_soup.find(class_='userstuff')
             if chapter_content:
                 content += chapter_content.get_text().strip() + '\n'
+                chapter_ids.append(chapter_id)
 
         # Retrieve the tags for the story
         tag_list = story.find(class_='tags commas').find_all('li')
@@ -64,13 +69,23 @@ for page_num in range(1, num_pages + 1):
             elif tag_type == 'relationship':
                 relationships.append(tag_text)
 
-        # Print the results for the story
-        print('Story ID:', story_id)
-        print('Chapter IDs:', [c['id'].split('_')[-1] for c in story.find_all(class_='chapter index group')])
-        print('Content:', content)
-        print('Characters:', characters)
-        print('Freeforms:', freeforms)
-        print('Warnings:', warnings)
-        print('Relationships:', relationships)
-        print('===============================')
+        # Store the results for the story in the dictionary
+        result_key = int(story_id) * 1000 + len(chapter_ids) - 1
+        results[result_key] = {
+            'story_id': story_id,
+            'chapter_ids': chapter_ids,
+            'content': content,
+            'characters': characters,
+            'freeforms': freeforms,
+            'warnings': warnings,
+            'relationships': relationships
+        }
+
+# Print the results
+for result in results.values():
+    print('Story ID:', result['story_id'])
+    print('Chapter IDs:', result['chapter_ids'])
+    print('Content:', result['content'])
+    print('Characters:', result['characters'])
+    print('Freeforms:',
 
