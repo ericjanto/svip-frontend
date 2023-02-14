@@ -87,5 +87,7 @@ for result in results.values():
     print('Chapter IDs:', result['chapter_ids'])
     print('Content:', result['content'])
     print('Characters:', result['characters'])
-    print('Freeforms:',
+    print('Freeforms:',result['freeforms'])
+    print('warnings': result['warnings'])
+    print('relationships': result['relationships'])
 
