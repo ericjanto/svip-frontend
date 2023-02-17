@@ -22,7 +22,7 @@ export default function SearchPage() {
     <br />
     {pages}
     {finished
-      ? <div>That's all results!</div>
+      ? <div>That&apos;s all results!</div>
       : <button onClick={() => setCnt(cnt + 1)}>Show more results</button>
     }
   </div>
