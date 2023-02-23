@@ -1,4 +1,6 @@
+import json
 from time import sleep
+from matplotlib.font_manager import json_dump
 import requests
 import datetime
 from time import sleep
@@ -236,14 +238,15 @@ for page_num in range(1, num_pages + 1):
 
                     name_div = chapterNum.find('div', class_='chapter preface group')
                     chNames.append(name_div.text.strip())
-                    print("got chapter name")
+                    # print("got chapter name")
 
                     content = chapterNum.find('div', class_='userstuff module')
-                    print("got chapter content")
+                    # print("got chapter content")
 
+                    print("content: ",content.find_all('p'))
 
-                    print("content: ",content.find_all('p')[1].text.strip())
                     if content:
+
                         print("list comp paras")
                         chContents = [para for para in content.find_all('p')]
                     else:
@@ -272,15 +275,7 @@ for page_num in range(1, num_pages + 1):
             text = pre.text.strip()
             print('AO3 Failed to load page Exception:', text)
         else:
-            print("other error, ",storyPage )
+            print("other error, ",storyPage)
 
-# # Print the results
-# for result in results.values()[:10]:
-#     print('Story ID:', result['story_id'])
-#     print('Chapter IDs:', result['chapter_ids'])
-#     print('Content:', result['content'])
-#     print('Characters:', result['characters'])
-#     print('Freeforms:',result['freeforms'])
-#     print('warnings', result['warnings'])
-#     print('relationships', result['relationships'])
-
+json.dumps(results, 'chapters'+yesterday+'.json')
+json.dumps(metaData, 'metaData'+yesterday+'.json')
