@@ -26,7 +26,7 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
     return (
         <form>
             <input
-                type="text"
+                type="search"
                 value={searchQuery}
                 onChange={handleChange}
                 // placeholder="Query..."
