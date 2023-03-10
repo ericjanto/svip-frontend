@@ -46,19 +46,19 @@ export default function SearchPage() {
                 w-full
                 mt-5
                 mb-5
-              bg-gray-200
+              bg-orange-200
               text-gray-800
                 font-medium
                 text-sm
                 leading-tight
                 rounded
                 shadow-md
-              hover:bg-gray-300
+              hover:bg-orange-300
                 hover:shadow-lg
                 focus:shadow-lg
                 focus:outline-none
                 focus:ring-0
-              active:bg-gray-400
+              active:bg-orange-400
                 hover:cursor-pointer
                 active:shadow-lg
                 transition
