@@ -18,7 +18,11 @@ const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
 export default function SearchPage() {
   
   const router = useRouter()
-  const { searchQuery } = router.query
+  var { searchQuery } = router.query
+
+  if (Array.isArray(searchQuery)) {
+    searchQuery = searchQuery.join(' ')
+  }
   
   // For zero-based pagination, set initial state to 1 and start loop at 0
   const [cnt, setCnt] = useState(2)
@@ -33,7 +37,7 @@ export default function SearchPage() {
   }
 
   return <div className='container px-24 space-y-3 max-w-4xl'>
-    <QueryInput initialState={searchQuery!} resetCnt={setCnt} />
+    <QueryInput initialState={searchQuery!} resetCnt={setCnt} showFeatureDetector/>
     <br />
     {pages}
     {finished || data?.length == 0

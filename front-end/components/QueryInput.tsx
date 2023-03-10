@@ -1,12 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import FeatureDetector from "./FeatureDetector"
 
 type QueryInputProps = {
-    initialState?: string | string[],
+    initialState?: string,
     resetCnt?: Dispatch<SetStateAction<number>>,
+    showFeatureDetector?: boolean
 }
 
-export default function QueryInput({ initialState, resetCnt }: QueryInputProps) {
+export default function QueryInput({ initialState, resetCnt, showFeatureDetector }: QueryInputProps) {
     const [searchQuery, setSearchQuery] = useState(initialState ? initialState : '')
 
     const handleChange = (e: { target: HTMLInputElement }) => {
@@ -24,14 +26,15 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
 
 
     return (
-        <form>
-            <input
-                type="search"
-                value={searchQuery}
-                onChange={handleChange}
-                // placeholder="Query..."
-                ref={inputElement}
-                className="
+        <>
+            <form>
+                <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={handleChange}
+                    // placeholder="Query..."
+                    ref={inputElement}
+                    className="
                         mt-5
                         form-control
                         w-5/6
@@ -49,13 +52,13 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
                         m-0
                         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
                     "
-            />
-            <Link href={`/search/${searchQuery}`} onClick={(e) => {
-                if (!searchQuery) e.preventDefault()
-                else if (resetCnt) resetCnt(2)
-            }}>
-                <input type="submit" value="Search"
-                    className="
+                />
+                <Link href={`/search/${searchQuery}`} onClick={(e) => {
+                    if (!searchQuery) e.preventDefault()
+                    else if (resetCnt) resetCnt(2)
+                }}>
+                    <input type="submit" value="Search"
+                        className="
                         px-6
                         pt-[11px]
                         pb-[9.5px]
@@ -76,7 +79,12 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
                         active:shadow-lg
                         transition
                         duration-150 ease-in-out"/>
-            </Link>
-        </form>
+                </Link>
+            </form>
+            {showFeatureDetector
+                ? <FeatureDetector searchQuery={searchQuery}/>
+                : <></>}
+
+        </>
     )
 }
