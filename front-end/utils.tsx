@@ -26,3 +26,12 @@ export function destructQuery(searchQuery: string): DestructedQuery {
 
     return { query, tags, wildcardUse, booleanUse, exactSearchUse }
 }
+
+export function highlightOccurringWords(text: string, query: string) {
+    const terms = query.split(/\s/g)
+    terms.forEach((t) => {
+        text = text.replaceAll(t, ' **' + t + '**')
+    })
+
+    return text
+}

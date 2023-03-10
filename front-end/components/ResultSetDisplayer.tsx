@@ -1,8 +1,11 @@
 import { Dispatch, SetStateAction } from 'react'
+import ReactMarkdown from 'react-markdown'
 import useSWR, { Fetcher } from 'swr'
 
+import { highlightOccurringWords } from '../utils'
+
 type ResultSetDisplayerProps = {
-    query: string | string[],
+    query: string,
     pageIndex: Number,
     setFinished: Dispatch<SetStateAction<boolean>>,
 }
@@ -35,7 +38,9 @@ export default function ResultSetDisplayer({ query, pageIndex, setFinished }: Re
                             <h3 className='text-blue-600 text-xl group-hover:underline'>
                                 {item.title}
                             </h3>
-                            <p className='text-sm text-gray-800'>{item.excerpt}</p>
+                            <ReactMarkdown className='text-sm text-gray-800'>
+                                {highlightOccurringWords(item.excerpt, query)}
+                            </ReactMarkdown>
                         </a>
                     </div>
                 )}
