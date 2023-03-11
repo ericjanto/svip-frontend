@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import Link from "next/link"
+
 import FeatureDetector from "./FeatureDetector"
 
 type QueryInputProps = {
@@ -11,9 +12,10 @@ type QueryInputProps = {
 export default function QueryInput({ initialState, resetCnt, showFeatureDetector }: QueryInputProps) {
     const [searchQuery, setSearchQuery] = useState(initialState ? initialState : '')
 
-    const handleChange = (e: { target: HTMLInputElement }) => {
+    const handleChange = (e: any) => {
         const target = e.target
         setSearchQuery(target.value)
+        handleCursorChange(e)
     }
 
     // Autofocus on page load
@@ -24,6 +26,16 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
         }
     }, []);
 
+    // Determine cursor position for tag autocomplete
+    const [currentEditedWord, setCurrentEditedWord] = useState(0)
+    const handleCursorChange = (e: { target: HTMLInputElement }) => {
+        const cursorPos = e.target.selectionEnd
+        if (cursorPos != null) {
+            // Look back until whitespace or start of string, if # appears before it's a tag
+            console.log(searchQuery.charAt(cursorPos - 1))
+            // setCurrentEditedWord()
+        }
+    }
 
     return (
         <>
@@ -32,7 +44,8 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                     type="search"
                     value={searchQuery}
                     onChange={handleChange}
-                    // placeholder="Query..."
+                    onClick={handleChange}
+                    onKeyUp={handleChange}
                     ref={inputElement}
                     className="
                         mt-5
@@ -82,9 +95,9 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                 </Link>
             </form>
             {showFeatureDetector
-                ? <FeatureDetector searchQuery={searchQuery}/>
+                ? <FeatureDetector searchQuery={searchQuery} />
                 : <></>}
-
+            {currentEditedWord}
         </>
     )
 }
