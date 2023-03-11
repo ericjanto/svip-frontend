@@ -28,8 +28,6 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
         })
     }
 
-    const dummyTagSuggestions = ['tag1', 'tag2', 'tag3', 'tag4', 'tag4']
-
     const handleClick = (e: any) => {
         // Replace query text
         const suggestedTagText = '#' + e.target.innerText
