@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
 import FeatureDetector from "./FeatureDetector"
+import TagSuggestor from "./TagSuggestor"
 
 type QueryInputProps = {
     initialState?: string,
@@ -27,19 +28,57 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
     }, []);
 
     // Determine cursor position for tag autocomplete
-    const [currentEditedWord, setCurrentEditedWord] = useState(0)
+    const [currentlyEditedTag, setCurrentlyEditedTag] = useState('')
     const handleCursorChange = (e: { target: HTMLInputElement }) => {
         const cursorPos = e.target.selectionEnd
         if (cursorPos != null) {
             // Look back until whitespace or start of string, if # appears before it's a tag
-            console.log(searchQuery.charAt(cursorPos - 1))
-            // setCurrentEditedWord()
+            let start = cursorPos
+            let end = 0
+            var potentialTag = ''
+            for (let i = start; i--; i >= end) {
+                let currentChar = searchQuery.charAt(i)
+                if (currentChar == ' ' || !currentChar) {
+                    break
+                } else {
+                    potentialTag += currentChar
+                }
+            }
+
+            potentialTag = potentialTag.split('').reverse().join('');
+
+            // Look forward until whitespace or end of query
+            start = cursorPos - 1
+            end = searchQuery.length
+            for (let i = start; i++; i < end) {
+                let currentChar = searchQuery.charAt(i)
+                if (currentChar == ' ' || !currentChar) {
+                    break
+                } else {
+                    potentialTag += currentChar
+                }
+            }
+
+            if (potentialTag.startsWith('#') && potentialTag.length > 1) {
+                setCurrentlyEditedTag(potentialTag)
+            } else if (potentialTag) {
+                setCurrentlyEditedTag('')
+            }
         }
     }
 
     return (
         <>
-            <form>
+            {currentlyEditedTag
+                ? <TagSuggestor
+                    currentEditedTag={currentlyEditedTag}
+                    setCurrentlyEditedTag={setCurrentlyEditedTag}
+                    currentQuery={searchQuery}
+                    setCurrentQuery={setSearchQuery}
+                    queryInputRef={inputElement}/>
+                : <div className="min-h-[19.5px]"></div>
+            }
+            <form className="mt-[0!important]">
                 <input
                     type="search"
                     value={searchQuery}
@@ -48,8 +87,8 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                     onKeyUp={handleChange}
                     ref={inputElement}
                     className="
-                        mt-5
                         form-control
+                        mt-8
                         w-5/6
                         px-3
                         py-1.5
@@ -97,7 +136,6 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
             {showFeatureDetector
                 ? <FeatureDetector searchQuery={searchQuery} />
                 : <></>}
-            {currentEditedWord}
         </>
     )
 }

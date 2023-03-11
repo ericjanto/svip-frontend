@@ -43,7 +43,7 @@ export default function FeatureDetector({ searchQuery }: FeatureDetectorProps) {
                         term3
                     </code>
                 </li>
-                <li className={exactSearchUse ? "text-green-600" : ""}>Use exact phrasal search:{' '}
+                <li className={exactSearchUse ? "text-green-600" : ""}>Use phrasal search:{' '}
                     <code>
                         <span className="text-blue-500">&quot;</span>
                         term1 term2
