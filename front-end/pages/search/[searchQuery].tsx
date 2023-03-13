@@ -36,7 +36,7 @@ export default function SearchPage() {
     pages.push(<ResultSetDisplayer query={searchQuery!} pageIndex={i} key={i} setFinished={setFinished} />)
   }
 
-  return <div className='container px-24 space-y-3 max-w-4xl'>
+  return <div className='container px-8 sm:px-24 space-y-3 max-w-4xl'>
     <QueryInput initialState={searchQuery!} resetCnt={setCnt} showFeatureDetector/>
     <br />
     {pages}
