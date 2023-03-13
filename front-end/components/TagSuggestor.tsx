@@ -44,7 +44,7 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
     return (
         <div className="mb-[-22px] mt-4">
             {isLoading
-                ? <div className="text-sm">Loading tag suggestions...</div>
+                ? <div className="text-sm text-gray-500 pt-[0.35rem]">Loading tag suggestions...</div>
                 : !data
                     ? <div className="text-sm">There are no similar tags!</div>
                     : topFiveTags.map(
