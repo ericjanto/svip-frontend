@@ -3,17 +3,23 @@ type DestructedQuery = {
     tags: string[] | null,
     wildcardUse: boolean,
     booleanUse: boolean,
-    exactSearchUse: boolean
+    exactSearchUse: boolean,
+    proximityUse: boolean,
+    termWildcardUse: boolean
 }
 
 export function destructQuery(searchQuery: string): DestructedQuery {
+    // This function is chaos, sorry
     const query = searchQuery
-    const tags = searchQuery.match(/\s#\S+|^#\S+/g)
+    var tags = searchQuery.match(/\s#(?!\d+\(\w+,\w+\))\S+|^#(?!\d+\(\w+,\w+\))\S+/g)
+
+    const proximityRe = /#\d+\(\w+,\w+\)/g
+    const proximityUse = proximityRe.test(searchQuery)
 
     const cleanQuery = searchQuery.replaceAll(/\s#\S+|^#\S+/g, '')
     const booleanUse = new RegExp(/\S+ AND +\S|\S+ OR +\S/g).test(cleanQuery)
 
-    const potentialWildcards = cleanQuery.match(/\*\S+|\S+\*\S+|\S+\*|\w+\s+\*\s+\w+/g)
+    const potentialWildcards = cleanQuery.match(/\*\S+|\S+\*\S+|\S+\*/g)
     var wildcardUse
     // Check that none of them are tags
     if (!potentialWildcards) {
@@ -24,7 +30,11 @@ export function destructQuery(searchQuery: string): DestructedQuery {
 
     const exactSearchUse = new RegExp(/\".+\"/g).test(cleanQuery)
 
-    return { query, tags, wildcardUse, booleanUse, exactSearchUse }
+    const termWildcardRe = new RegExp(/"\w+\s+\*\s+\w+"/g)
+    const termWildcardUse = termWildcardRe.test(cleanQuery)
+
+
+    return { query, tags, wildcardUse, booleanUse, exactSearchUse, proximityUse, termWildcardUse }
 }
 
 export function highlightOccurringWords(text: string, query: string) {
