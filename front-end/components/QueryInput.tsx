@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import FeatureDetector from "./FeatureDetector"
 import TagSuggestor from "./TagSuggestor"
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 
 type QueryInputProps = {
     initialState?: string,
@@ -75,7 +76,7 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                     setCurrentlyEditedTag={setCurrentlyEditedTag}
                     currentQuery={searchQuery}
                     setCurrentQuery={setSearchQuery}
-                    queryInputRef={inputElement}/>
+                    queryInputRef={inputElement} />
                 : <div className="min-h-[19.5px]"></div>
             }
             <form className="mt-[0!important]">
@@ -109,8 +110,10 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                     if (!searchQuery) e.preventDefault()
                     else if (resetCnt) resetCnt(2)
                 }}>
-                    <input type="submit" value="Search"
+                    <button type="submit" value="Search"
                         className="
+                        hidden
+                        sm:inline
                         px-6
                         pt-[11px]
                         pb-[9.5px]
@@ -130,7 +133,35 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                         hover:cursor-pointer
                         active:shadow-lg
                         transition
-                        duration-150 ease-in-out"/>
+                        duration-150 ease-in-out">
+                        Search
+                    </button>
+                    <button type="submit" value="Search"
+                        className="
+                        inline
+                        sm:hidden
+                        px-6
+                        pt-[10px]
+                        pb-[13px]
+                        w-1/6
+                      bg-blue-600
+                      text-white
+                        font-medium
+                        text-sm
+                        leading-tight
+                        uppercase
+                        rounded-r
+                        hover:bg-blue-700
+                        focus:bg-blue-700
+                        focus:outline-none
+                        focus:ring-0
+                        active:bg-blue-800
+                        hover:cursor-pointer
+                        active:shadow-lg
+                        transition
+                        duration-150 ease-in-out">
+                        <MagnifyingGlassIcon/>
+                    </button>
                 </Link>
             </form>
             {showFeatureDetector
