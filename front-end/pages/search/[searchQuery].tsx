@@ -40,6 +40,7 @@ export default function SearchPage() {
     <QueryInput initialState={searchQuery!} resetCnt={setCnt} showFeatureDetector/>
     <br />
     {pages}
+    
     {finished || data?.length == 0
       ? (
         <div>

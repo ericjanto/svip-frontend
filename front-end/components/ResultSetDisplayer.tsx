@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import useSWR, { Fetcher } from 'swr'
 
 import { highlightOccurringWords } from '../utils'
+import ResultsLoadingSkeleton from './ResultsLoadingSkeleton'
 
 type ResultSetDisplayerProps = {
     query: string,
@@ -25,7 +26,7 @@ export default function ResultSetDisplayer({ query, pageIndex, setFinished }: Re
     const { data, error, isLoading } = useSWR(`${API_URL}?query=${query}&p=${pageIndex}&l=15`, fetcher);
 
     if (error) return <div>failed to load: ({error})</div>
-    if (isLoading) return <div>loading...</div>
+    if (isLoading) return <ResultsLoadingSkeleton />
     if (data!.length > 0) {
         return (
             <>
