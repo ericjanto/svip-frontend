@@ -31,7 +31,7 @@ print(num_pages)
 results = {}
 
 # Iterate over each page of stories
-for page_num in range(1,num_pages + 1):
+for page_num in range(1,2):#num_pages + 1):
 
     #url reset
     url2 = 'https://archiveofourown.org/tags/Harry%20Potter%20-%20J*d*%20K*d*%20Rowling/works?commit=Sort+and+Filter&page='+ str(page_num) +'&work_search%5Bcomplete%5D=&work_search%5Bcrossover%5D=&work_search%5Bdate_from%5D='+yesterday+'2&work_search%5Bdate_to%5D='+yesterday+'&work_search%5Bexcluded_tag_names%5D=&work_search%5Blanguage_id%5D=&work_search%5Bother_tag_names%5D=&work_search%5Bquery%5D=&work_search%5Bsort_column%5D=created_at&work_search%5Bwords_from%5D=&work_search%5Bwords_to%5D='
@@ -306,22 +306,26 @@ for page_num in range(1,num_pages + 1):
         chapSingle = main_content.find('div', class_='userstuff')
 
         regex = re.compile('([a-zA-Z]\"[a-zA-Z])', re.S)
-            
+
         if ch_list:
             # print("ChGroup", ch_list)
         
-            # print('chaptergroup', len(ch_list))
-            for i, chapterNum in enumerate(ch_list):
-
-                name_div = chapterNum.find('div', class_='chapter preface group')
+            print('chaptergroup', len(ch_list))
+            for i in range(0, len(ch_list), 2):
                 
+                try:
+                    name_div = ch_list[i+1].find('div', {'role': 'complementary'}, class_='chapter preface group')
+                except:
+                    name_div=ch_list[-1]
+
+    
                 if not isinstance(name_div, NoneType):
                     chNames.append(name_div.text.strip())
                 else:
                     chNames.append('')
                 # print("got chapter name")
 
-                content = chapterNum.find('div', class_='userstuff module')
+                content = ch_list[i].find('div', class_='userstuff module')
                 # print("got chapter content")
 
                 # print("content: ",content.find_all('p'))
@@ -331,19 +335,24 @@ for page_num in range(1,num_pages + 1):
     
                 elif content:
                     # print("list comp paras")
-                    chContents = [regex.sub(lambda m: m.group().replace('<br>',"\\n",1), para.text).strip() for para in content.find_all('p')]
+                    Contents = [regex.sub(lambda m: m.group().replace('<br>',"\\n",1), para.text).strip() for para in content.find_all('p')]
+                    chContents = '\n'.join(Contents)
                 else:
                     chContents = ''
+
+                # print(chContents)
                 
                 # Store the results for the story in the dictionary
-                chapterID = round(round(int(story_id),12) * 1000 + i, 12)
+                chapterID = round(round(int(story_id),12) * 1000 + round(i/2), 12)
                 # print("chapter vs chapter ID - {}|{}".format(i, chapterID))
+
                 results.update({chapterID: chContents})
 
         elif chapSingle:
             # print("single Section Text")
             chapterID = round(int(story_id) * 1000, 12)
-            results.update({chapterID: regex.sub(lambda m: m.group().replace('<br>',"\\n",1), chapSingle.text).strip()})
+            content = regex.sub(lambda m: m.group().replace('<br>',"\\n",1), chapSingle.text).strip()
+            results.update({chapterID: content})
 
         else:
             print('No Text')
