@@ -1,17 +1,23 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
+import FeatureDetector from "./FeatureDetector"
+import TagSuggestor from "./TagSuggestor"
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
+
 type QueryInputProps = {
-    initialState?: string | string[],
+    initialState?: string,
     resetCnt?: Dispatch<SetStateAction<number>>,
+    showFeatureDetector?: boolean
 }
 
-export default function QueryInput({ initialState, resetCnt }: QueryInputProps) {
+export default function QueryInput({ initialState, resetCnt, showFeatureDetector }: QueryInputProps) {
     const [searchQuery, setSearchQuery] = useState(initialState ? initialState : '')
 
-    const handleChange = (e: { target: HTMLInputElement }) => {
+    const handleChange = (e: any) => {
         const target = e.target
         setSearchQuery(target.value)
+        handleCursorChange(e)
     }
 
     // Autofocus on page load
@@ -22,18 +28,69 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
         }
     }, []);
 
+    // Determine cursor position for tag autocomplete
+    const [currentlyEditedTag, setCurrentlyEditedTag] = useState('')
+    const handleCursorChange = (e: { target: HTMLInputElement }) => {
+        const cursorPos = e.target.selectionEnd
+        if (cursorPos != null) {
+            // Look back until whitespace or start of string, if # appears before it's a tag
+            let start = cursorPos
+            let end = 0
+            var potentialTag = ''
+            for (let i = start; i--; i >= end) {
+                let currentChar = searchQuery.charAt(i)
+                if (currentChar == ' ' || !currentChar) {
+                    break
+                } else {
+                    potentialTag += currentChar
+                }
+            }
+
+            potentialTag = potentialTag.split('').reverse().join('');
+
+            // Look forward until whitespace or end of query
+            start = cursorPos - 1
+            end = searchQuery.length
+            for (let i = start; i++; i < end) {
+                let currentChar = searchQuery.charAt(i)
+                if (currentChar == ' ' || !currentChar) {
+                    break
+                } else {
+                    potentialTag += currentChar
+                }
+            }
+
+            if (potentialTag.startsWith('#') && potentialTag.length > 1) {
+                setCurrentlyEditedTag(potentialTag)
+            } else if (potentialTag) {
+                setCurrentlyEditedTag('')
+            }
+        }
+    }
 
     return (
         <>
-            <form>
+            {currentlyEditedTag
+                ? <TagSuggestor
+                    currentEditedTag={currentlyEditedTag}
+                    setCurrentlyEditedTag={setCurrentlyEditedTag}
+                    currentQuery={searchQuery}
+                    setCurrentQuery={setSearchQuery}
+                    queryInputRef={inputElement} />
+                : <div className="min-h-[19.5px]"></div>
+            }
+            <form className="mt-[0!important]">
                 <input
-                    type="text"
+                    type="search"
                     value={searchQuery}
                     onChange={handleChange}
-                    placeholder="Query..."
+                    onClick={handleChange}
+                    onKeyUp={handleChange}
                     ref={inputElement}
                     className="
                         form-control
+                        mt-8
+                        w-5/6
                         px-3
                         py-1.5
                         text-base
@@ -41,7 +98,8 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
                         text-gray-700
                         bg-white bg-clip-padding
                         border border-solid border-gray-300
-                        rounded
+                        border-r-0
+                        rounded-l
                         transition
                         ease-in-out
                         m-0
@@ -52,9 +110,63 @@ export default function QueryInput({ initialState, resetCnt }: QueryInputProps) 
                     if (!searchQuery) e.preventDefault()
                     else if (resetCnt) resetCnt(2)
                 }}>
-                    <input type="submit" value="Search" className="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"/>
+                    <button type="submit" value="Search"
+                        className="
+                        hidden
+                        sm:inline
+                        px-6
+                        pt-[11px]
+                        pb-[9.5px]
+                        w-1/6
+                      bg-blue-600
+                      text-white
+                        font-medium
+                        text-sm
+                        leading-tight
+                        uppercase
+                        rounded-r
+                        hover:bg-blue-700
+                        focus:bg-blue-700
+                        focus:outline-none
+                        focus:ring-0
+                        active:bg-blue-800
+                        hover:cursor-pointer
+                        active:shadow-lg
+                        transition
+                        duration-150 ease-in-out">
+                        Search
+                    </button>
+                    <button type="submit" value="Search"
+                        className="
+                        inline
+                        sm:hidden
+                        px-6
+                        pt-[10px]
+                        pb-[13px]
+                        w-1/6
+                      bg-blue-600
+                      text-white
+                        font-medium
+                        text-sm
+                        leading-tight
+                        uppercase
+                        rounded-r
+                        hover:bg-blue-700
+                        focus:bg-blue-700
+                        focus:outline-none
+                        focus:ring-0
+                        active:bg-blue-800
+                        hover:cursor-pointer
+                        active:shadow-lg
+                        transition
+                        duration-150 ease-in-out">
+                        <MagnifyingGlassIcon/>
+                    </button>
                 </Link>
             </form>
+            {showFeatureDetector
+                ? <FeatureDetector searchQuery={searchQuery} />
+                : <></>}
         </>
     )
 }

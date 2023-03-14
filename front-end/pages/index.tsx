@@ -4,8 +4,10 @@ export default function HomePage() {
   return (
     <>
       <main>
-        <div>Home page. This will probably only show an input field, not much more.</div>
-        <QueryInput initialState=''/>
+        <h1 className="container mx-auto text-center text-lg mt-20">Logo Placeholder</h1>
+        <div className='container px-24 space-y-3 max-w-4xl mx-auto'>
+          <QueryInput initialState='' />
+        </div>
       </main>
     </>
   )
