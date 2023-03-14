@@ -211,7 +211,7 @@ for page_num in range(1,num_pages + 1):
         if statsec:
             statData = stats_section.find('dd', class_="status").text.strip()
         else:
-            statData = '0'
+            statData = '-999'
 
         # words
         wordsec = stats_section.find('dt', class_='words')
@@ -283,7 +283,9 @@ for page_num in range(1,num_pages + 1):
 
 
         metaDataKey = story_id
-        meta = {'summary':summary,
+        meta = {'author':author,
+                'title':title,
+                'summary':summary,
                 'warnings':warningTags,
                 'categories':categoryTags,
                 'fandom': fandomTags,
