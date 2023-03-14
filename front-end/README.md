@@ -24,6 +24,10 @@ If not running
 ```
 cd search-engine
 screen -d
+git pull
+npm install
+pnpm run dev
+apache-restart
 ```
 
 Apache2 is configured in /etc/apache2/sites-available/000-default.conf to proxy pass listens on *:80 to port *:3000.
