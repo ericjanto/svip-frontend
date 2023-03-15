@@ -6,8 +6,7 @@ import { highlightOccurringWords } from '../utils'
 import ResultsLoadingSkeleton from './ResultsLoadingSkeleton'
 
 type ResultSetDisplayerProps = {
-    query: string,
-    setFinished: Dispatch<SetStateAction<boolean>>,
+    fetchQuery: string,
 }
 
 type Results = {
@@ -22,8 +21,8 @@ const fetcher: Fetcher<Results> = (url: RequestInfo | URL) => fetch(url).then(r 
 // const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
 // const API_URL = 'http://localhost:5000/query'
 
-export default function ResultSetDisplayer({ query, setFinished }: ResultSetDisplayerProps) {
-    const { data, error, isLoading } = useSWR(query, fetcher);
+export default function ResultSetDisplayer({ fetchQuery }: ResultSetDisplayerProps) {
+    const { data, error, isLoading } = useSWR(fetchQuery, fetcher);
 
     if (error) return <div>failed to load: ({JSON.stringify(error)})</div>
     if (isLoading) return <ResultsLoadingSkeleton />
@@ -40,7 +39,7 @@ export default function ResultSetDisplayer({ query, setFinished }: ResultSetDisp
                                 {item.title}
                             </h3>
                             <ReactMarkdown className='text-sm text-gray-800'>
-                                {highlightOccurringWords(item.excerpt, query)}
+                                {highlightOccurringWords(item.excerpt, fetchQuery)}
                             </ReactMarkdown>
                         </a>
                     </div>
@@ -48,7 +47,6 @@ export default function ResultSetDisplayer({ query, setFinished }: ResultSetDisp
             </>
         )
     } else {
-        setFinished(true)
         return (
             <></>
         )

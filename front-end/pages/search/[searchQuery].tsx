@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import useSWR, { Fetcher } from 'swr'
 
 import ResultSetDisplayer from '../../components/ResultSetDisplayer'
 import QueryInput from '../../components/QueryInput'
-import useSWR, { Fetcher } from 'swr'
 import { extractTagsFromPath } from '../../utils'
 
 type Results = {
@@ -14,7 +14,6 @@ type Results = {
 }[]
 
 const fetcher: Fetcher<Results> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
-// const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
 const API_URL = 'http://localhost:5006/query'
 
 export default function SearchPage() {
@@ -28,7 +27,6 @@ export default function SearchPage() {
 
   // For zero-based pagination, set initial state to 1 and start loop at 0
   const [cnt, setCnt] = useState(2)
-  const [finished, setFinished] = useState(false)
 
   const tags = extractTagsFromPath(router.asPath)
   var initialTags: string[] = []
@@ -36,10 +34,7 @@ export default function SearchPage() {
 
   var url = `${API_URL}?q=${searchQuery}&p=${cnt}&l=15`
   if (tags.length != 0) {
-    url += '&tags='
-    tags.forEach((t) => {
-      url += `${t},`
-    })
+    url += `&tags=${tags.join(',')}`
   }
 
   // Revalidate if more results available
@@ -49,12 +44,9 @@ export default function SearchPage() {
   for (let i = 1; i < cnt; i++) {
     var url = `${API_URL}?q=${searchQuery}&p=${i}&l=15`
     if (tags.length != 0) {
-      url += '&tags='
-      tags.forEach((t) => {
-        url += `${t},`
-      })
+      url += `&tags=${tags.join(',')}`
     }
-    pages.push(<ResultSetDisplayer query={url} key={i} setFinished={setFinished} />)
+    pages.push(<ResultSetDisplayer fetchQuery={url} key={i} />)
   }
 
   return <div className='container px-8 sm:px-24 space-y-3 max-w-4xl'>
@@ -93,7 +85,7 @@ export default function SearchPage() {
           </button>
         </div>)
       : data?.length == 0
-        ? <div>No results found. If you expect any or more results, please check that you
+        ? <div>No results found. If you expected results, please check that you
           entered correct tags and metadata filters.</div>
         :
         (
