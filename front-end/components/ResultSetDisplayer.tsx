@@ -7,7 +7,6 @@ import ResultsLoadingSkeleton from './ResultsLoadingSkeleton'
 
 type ResultSetDisplayerProps = {
     query: string,
-    pageIndex: Number,
     setFinished: Dispatch<SetStateAction<boolean>>,
 }
 
@@ -20,18 +19,19 @@ type Results = {
 
 
 const fetcher: Fetcher<Results> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
-const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
+// const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
+// const API_URL = 'http://localhost:5000/query'
 
-export default function ResultSetDisplayer({ query, pageIndex, setFinished }: ResultSetDisplayerProps) {
-    const { data, error, isLoading } = useSWR(`${API_URL}?query=${query}&p=${pageIndex}&l=15`, fetcher);
+export default function ResultSetDisplayer({ query, setFinished }: ResultSetDisplayerProps) {
+    const { data, error, isLoading } = useSWR(query, fetcher);
 
-    if (error) return <div>failed to load: ({error})</div>
+    if (error) return <div>failed to load: ({JSON.stringify(error)})</div>
     if (isLoading) return <ResultsLoadingSkeleton />
     if (data!.length > 0) {
         return (
             <>
-                {data!.map(item =>
-                    <div key={item.docId.toString()}>
+                {data!.map((item, index) =>
+                    <div key={index}>
                         <a href={item.url} className='group'>
                             {/* <em>docId: {item.docId.toString()}</em> */}
                             <br />

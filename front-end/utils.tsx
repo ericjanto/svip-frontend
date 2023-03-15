@@ -47,3 +47,13 @@ export function highlightOccurringWords(text: string, query: string) {
 
     return text
 }
+
+export function extractTagsFromPath(path: string) {
+    if (!path.indexOf('%20')) {
+        return []
+    } else {
+        const queryTagProcessed = path.replaceAll('%20', ' ')
+        const tags = queryTagProcessed.match(/\s#(?!\d+\(\w+,\w+\))\S+|^#(?!\d+\(\w+,\w+\))\S+/g)?.map((tag: string) => { return tag.trim().replace('#', '') })
+        return tags ? tags : []
+    }
+}

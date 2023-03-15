@@ -1,17 +1,19 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 
 import FeatureDetector from "./FeatureDetector"
 import TagSuggestor from "./TagSuggestor"
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
+import MetadataFilter from "./MetadataFilter"
 
 type QueryInputProps = {
     initialState?: string,
     resetCnt?: Dispatch<SetStateAction<number>>,
-    showFeatureDetector?: boolean
+    showFeatureDetector?: boolean,
+    showMetadataFilter?: boolean
 }
 
-export default function QueryInput({ initialState, resetCnt, showFeatureDetector }: QueryInputProps) {
+export default function QueryInput({ initialState, resetCnt, showFeatureDetector, showMetadataFilter }: QueryInputProps) {
     const [searchQuery, setSearchQuery] = useState(initialState ? initialState : '')
 
     const handleChange = (e: any) => {
@@ -160,12 +162,15 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                         active:shadow-lg
                         transition
                         duration-150 ease-in-out">
-                        <MagnifyingGlassIcon/>
+                        <MagnifyingGlassIcon />
                     </button>
                 </Link>
             </form>
             {showFeatureDetector
                 ? <FeatureDetector searchQuery={searchQuery} />
+                : <></>}
+            {showMetadataFilter
+                ? <MetadataFilter />
                 : <></>}
         </>
     )

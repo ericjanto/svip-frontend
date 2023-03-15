@@ -4,6 +4,7 @@ import { useState } from 'react'
 import ResultSetDisplayer from '../../components/ResultSetDisplayer'
 import QueryInput from '../../components/QueryInput'
 import useSWR, { Fetcher } from 'swr'
+import { extractTagsFromPath } from '../../utils'
 
 type Results = {
   docId: Number,
@@ -13,35 +14,54 @@ type Results = {
 }[]
 
 const fetcher: Fetcher<Results> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
-const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
+// const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/documents'
+const API_URL = 'http://localhost:5006/query'
 
 export default function SearchPage() {
-  
+
   const router = useRouter()
   var { searchQuery } = router.query
 
   if (Array.isArray(searchQuery)) {
-    searchQuery = searchQuery.join(' ')
+    searchQuery = searchQuery.join('')
   }
-  
+
   // For zero-based pagination, set initial state to 1 and start loop at 0
   const [cnt, setCnt] = useState(2)
   const [finished, setFinished] = useState(false)
 
+  const tags = extractTagsFromPath(router.asPath)
+  var initialTags: string[] = []
+  tags.forEach((t) => initialTags.push(`#${t}`))
+
+  var url = `${API_URL}?q=${searchQuery}&p=${cnt}&l=15`
+  if (tags.length != 0) {
+    url += '&tags='
+    tags.forEach((t) => {
+      url += `${t},`
+    })
+  }
+
   // Revalidate if more results available
-  const { data, error, isLoading } = useSWR(`${API_URL}?query=${searchQuery}&p=${cnt}&l=15`, fetcher, {refreshInterval: 1000});
+  const { data, error, isLoading } = useSWR(url, fetcher, { refreshInterval: 1000 });
 
   const pages = []
   for (let i = 1; i < cnt; i++) {
-    pages.push(<ResultSetDisplayer query={searchQuery!} pageIndex={i} key={i} setFinished={setFinished} />)
+    var url = `${API_URL}?q=${searchQuery}&p=${i}&l=15`
+    if (tags.length != 0) {
+      url += '&tags='
+      tags.forEach((t) => {
+        url += `${t},`
+      })
+    }
+    pages.push(<ResultSetDisplayer query={url} key={i} setFinished={setFinished} />)
   }
 
   return <div className='container px-8 sm:px-24 space-y-3 max-w-4xl'>
-    <QueryInput initialState={searchQuery!} resetCnt={setCnt} showFeatureDetector/>
+    <QueryInput initialState={searchQuery ? searchQuery! + initialTags.join(' ') : ''} resetCnt={setCnt} showFeatureDetector showMetadataFilter />
     <br />
     {pages}
-    
-    {finished || data?.length == 0
+    {pages.length > 1 && data?.length == 0
       ? (
         <div>
           <button onClick={() => window.scrollTo(0, 0)}
@@ -72,10 +92,14 @@ export default function SearchPage() {
             All results shown, jump to top
           </button>
         </div>)
-      : (
-        <div>
-          <button onClick={() => setCnt(cnt + 1)}
-            className="
+      : data?.length == 0
+        ? <div>No results found. If you expect any or more results, please check that you
+          entered correct tags and metadata filters.</div>
+        :
+        (
+          <div>
+            <button onClick={() => setCnt(cnt + 1)}
+              className="
                 px-6
                 py-2
                 w-full
@@ -98,10 +122,10 @@ export default function SearchPage() {
                 active:shadow-lg
                 transition
                 duration-150 ease-in-out"
-          >
-            Show more results
-          </button>
-        </div>)
+            >
+              Show more results
+            </button>
+          </div>)
     }
   </div>
 }
