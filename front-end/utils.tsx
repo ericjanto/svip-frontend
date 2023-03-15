@@ -38,7 +38,10 @@ export function destructQuery(searchQuery: string): DestructedQuery {
 }
 
 export function highlightOccurringWords(text: string, query: string) {
-    const terms = query.split(/\s/g)
+    var terms = query.split(/\s/g)
+    if (terms.length == 0) {
+        terms = query.split('%20')
+    }
 
     terms.forEach((t) => {
         text = text.replaceAll(` ${t} `, ' **' + t + '** ')
