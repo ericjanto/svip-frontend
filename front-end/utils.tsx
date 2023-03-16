@@ -55,8 +55,17 @@ export function extractTagsFromPath(path: string) {
     if (!path.indexOf('%20')) {
         return []
     } else {
+        path = path.replace('/search/','')
         const queryTagProcessed = path.replaceAll('%20', ' ')
         const tags = queryTagProcessed.match(/\s#(?!\d+\(\w+,\w+\))\S+|^#(?!\d+\(\w+,\w+\))\S+/g)?.map((tag: string) => { return tag.trim().replace('#', '') })
         return tags ? tags : []
+    }
+}
+
+export function removeTags(searchQuery: string | undefined) {
+    if (searchQuery) {
+        return searchQuery.replaceAll(/\s#(?!\d+\(\w+,\w+\))\S+|^#(?!\d+\(\w+,\w+\))\S+/g, '').trim()
+    } else {
+        return ''
     }
 }

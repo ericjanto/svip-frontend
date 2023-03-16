@@ -30,12 +30,12 @@ export default function MetadataFilter() {
                         <input type="number" id="wordCountTo" name="wordCountTo" min="1" className="border" />
                     </li>
                     <li>
-                        <label htmlFor="hitsCountFrom">Minimum number of hits (&gt;0):</label><br />
-                        <input type="number" id="hitsCountFrom" name="wordCountFrom" min="1" className="border" />
+                        <label htmlFor="hitCountFrom">Minimum number of hit (&gt;0):</label><br />
+                        <input type="number" id="hitCountFrom" name="hitCountFrom" min="1" className="border" />
                     </li>
                     <li>
-                        <label htmlFor="hitsCountTo">Maximum number of hits (&gt;0):</label><br />
-                        <input type="number" id="hitsCountTo" name="hitsCountTo" min="1" className="border" />
+                        <label htmlFor="hitCountTo">Maximum number of hit (&gt;0):</label><br />
+                        <input type="number" id="hitCountTo" name="hitCountTo" min="1" className="border" />
                     </li>
                     <li>
                         <label htmlFor="kudosCountFrom">Minimum number of kudos (&gt;0):</label><br />
@@ -46,28 +46,28 @@ export default function MetadataFilter() {
                         <input type="number" id="kudosCountTo" name="kudosCountTo" min="1" className="border" />
                     </li>
                     <li>
-                        <label htmlFor="commentsCountFrom">Minimum number of comments (&gt;0):</label><br />
-                        <input type="number" id="commentsCountFrom" name="commentsCountFrom" min="1" className="border" />
+                        <label htmlFor="commentCountFrom">Minimum number of comment (&gt;0):</label><br />
+                        <input type="number" id="commentCountFrom" name="commentCountFrom" min="1" className="border" />
                     </li>
                     <li>
-                        <label htmlFor="commentsCountTo">Maximum number of comments (&gt;0):</label><br />
-                        <input type="number" id="commentsCountTo" name="commentsCountTo" min="1" className="border" />
+                        <label htmlFor="commentCountTo">Maximum number of comment (&gt;0):</label><br />
+                        <input type="number" id="commentCountTo" name="commentCountTo" min="1" className="border" />
                     </li>
                     <li>
-                        <label htmlFor="bookmarksCountFrom">Minimum number of bookmarks (&gt;0):</label><br />
-                        <input type="number" id="bookmarksCountFrom" name="bookmarksCountFrom" min="1" className="border" />
+                        <label htmlFor="bookmarkCountFrom">Minimum number of bookmark (&gt;0):</label><br />
+                        <input type="number" id="bookmarkCountFrom" name="bookmarkCountFrom" min="1" className="border" />
                     </li>
                     <li>
-                        <label htmlFor="bookmarksCountTo">Maximum number of bookmarsk (&gt;0):</label><br />
-                        <input type="number" id="bookmarksCountTo" name="bookmarksCountTo" min="1" className="border" />
+                        <label htmlFor="bookmarkCountTo">Maximum number of bookmark (&gt;0):</label><br />
+                        <input type="number" id="bookmarkCountTo" name="bookmarkCountTo" min="1" className="border" />
                     </li>
                     <li>
                         <label htmlFor="lastUpdatedFrom">Has been updated since</label><br />
                         <input type="date" id="lastUpdatedFrom" name="lastUpdatedFrom" />
                     </li>
                     <li>
-                        <label htmlFor="lastUpdated">Has been updated before</label><br />
-                        <input type="date" id="dateTo" name="lastUpdatedTo" />
+                        <label htmlFor="lastUpdatedTo">Has been updated before</label><br />
+                        <input type="date" id="lastUpdatedTo" name="lastUpdatedTo" />
                     </li>
                 </ul>
 

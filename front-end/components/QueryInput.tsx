@@ -81,9 +81,11 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                     queryInputRef={inputElement} />
                 : <div className="min-h-[19.5px]"></div>
             }
+            {/* {searchQuery} */}
             <form className="mt-[0!important]">
                 <input
                     type="search"
+                    name="q"
                     value={searchQuery}
                     onChange={handleChange}
                     onClick={handleChange}
@@ -108,7 +110,7 @@ export default function QueryInput({ initialState, resetCnt, showFeatureDetector
                         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
                     "
                 />
-                <Link href={`/search/${searchQuery}`} onClick={(e) => {
+                <Link href={`/search/${encodeURIComponent(searchQuery)}`} onClick={(e) => {
                     if (!searchQuery) e.preventDefault()
                     else if (resetCnt) resetCnt(2)
                 }}>

@@ -4,7 +4,7 @@ import useSWR, { Fetcher } from 'swr'
 
 import ResultSetDisplayer from '../../components/ResultSetDisplayer'
 import QueryInput from '../../components/QueryInput'
-import { extractTagsFromPath } from '../../utils'
+import { extractTagsFromPath, removeTags } from '../../utils'
 
 type Results = {
   docId: Number,
@@ -28,24 +28,47 @@ export default function SearchPage() {
   // For zero-based pagination, set initial state to 1 and start loop at 0
   const [cnt, setCnt] = useState(2)
 
-  const tags = extractTagsFromPath(router.asPath)
+  const tags = extractTagsFromPath(decodeURIComponent(router.asPath))
+  
+  console.log(tags)
+  // console.log(searchQuery)
+
   var initialTags: string[] = []
   tags.forEach((t) => initialTags.push(`#${t}`))
 
-  var url = `${API_URL}?q=${searchQuery}&p=${cnt}&l=15`
+  var metadata: RegExpMatchArray | string | null = router.asPath.match(/\?(.*lastUpdatedTo=(?!#).*)/g)
+  // console.log(metadata)
+  if (metadata && metadata!.length > 0) {
+    metadata = metadata![0].replace('?','&')
+  }
+  // console.log(metadata)
+
+  var url = `${API_URL}?q=${removeTags(searchQuery)}&p=${cnt}&l=15`
   if (tags.length != 0) {
     url += `&tags=${tags.join(',')}`
   }
+
+  if (metadata) {
+    url += metadata
+  }
+
+  console.log(url)
 
   // Revalidate if more results available
   const { data, error, isLoading } = useSWR(url, fetcher, { refreshInterval: 1000 });
 
   const pages = []
   for (let i = 1; i < cnt; i++) {
-    var url = `${API_URL}?q=${searchQuery}&p=${i}&l=15`
+    var url = `${API_URL}?q=${removeTags(searchQuery)}&p=${i}&l=15`
     if (tags.length != 0) {
       url += `&tags=${tags.join(',')}`
     }
+
+    if (metadata) {
+      url += metadata
+    }
+
+    console.log(url)
     pages.push(<ResultSetDisplayer fetchQuery={url} key={i} />)
   }
 
@@ -85,7 +108,7 @@ export default function SearchPage() {
           </button>
         </div>)
       : data?.length == 0
-        ? <div>No results found. If you expected results, please check that you
+        ? <div className='py-8'>No more results found. If you expected more results, please check that you
           entered correct tags and metadata filters.</div>
         :
         (

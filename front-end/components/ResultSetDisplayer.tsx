@@ -24,7 +24,8 @@ const fetcher: Fetcher<Results> = (url: RequestInfo | URL) => fetch(url).then(r 
 export default function ResultSetDisplayer({ fetchQuery }: ResultSetDisplayerProps) {
     const { data, error, isLoading } = useSWR(fetchQuery, fetcher);
 
-    if (error) return <div>failed to load: ({JSON.stringify(error)})</div>
+    if (error) return <div>We don't support this kind of query.</div>
+    // if (error) return <div>failed to load: ({JSON.stringify(error)})</div>
     if (isLoading) return <ResultsLoadingSkeleton />
     if (data!.length > 0) {
         return (
