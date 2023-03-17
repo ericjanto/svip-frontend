@@ -57,7 +57,8 @@ export default function SearchPage() {
   // console.log(url)
 
   // Revalidate if more results available
-  const { data, error, isLoading } = useSWR(url, fetcher, { refreshInterval: 1000 });
+  // const { data, error, isLoading } = useSWR(url, fetcher, { refreshInterval: 1000 });
+  const { data, error, isLoading } = useSWR(url, fetcher);
 
   const pages = []
   for (let i = 1; i < cnt; i++) {
