@@ -31,7 +31,7 @@ export default function ResultSetDisplayer({ fetchQuery }: ResultSetDisplayerPro
         return (
             <>
                 {data!.map((item, index) => {
-                    let chapterNum = item.url.charAt(item.url.length-1)
+                    let chapterNum = item.url.slice(item.url.indexOf('/chapters/') + 10)
                     // console.log(item.excerpt)
                     console.log(fetchQuery)
                     return <div key={index}>
