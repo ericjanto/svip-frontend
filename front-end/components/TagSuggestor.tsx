@@ -10,23 +10,28 @@ type TagSuggestorProps = {
 }
 
 type TagApiResults = {
-    id: Number,
-    tag: string,
-}[]
+    [key: string]: {
+      [key: string]: Array<Array<[string, number]>>
+    }
+  }
 
 const fetcher: Fetcher<TagApiResults> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
-const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/tags'
+// const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/tags'
+const API_URL = 'http://localhost:5006/autocomplete'
 
 export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, currentQuery, setCurrentQuery, queryInputRef }: TagSuggestorProps) {
     // Here, make request to tag autocomplete API
-    const { data, error, isLoading } = useSWR(API_URL, fetcher)
+    const { data, error, isLoading } = useSWR(`${API_URL}?prefix=${encodeURIComponent(currentEditedTag.replace('#',''))}`, fetcher)
 
     const topFiveTags: string[] = []
     if (data) {
-        data.slice(0, 5).forEach((item) => {
-            topFiveTags.push(item.tag)
+        const arr = Object.values(data)[0]
+
+        arr["5"].forEach(element => {
+            topFiveTags.push(element)
         })
-    }
+
+    }   
 
     const handleClick = (e: any) => {
         // Replace query text
@@ -45,10 +50,11 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
         <div className="mb-[-22px] mt-4">
             {isLoading
                 ? <div className="text-sm text-gray-500 pt-[0.35rem]">Loading tag suggestions...</div>
-                : !data
-                    ? <div className="text-sm">There are no similar tags!</div>
+                : topFiveTags.length == 0
+                    ? 
+                    <div className="text-sm">There are no similar tags!</div>
                     : topFiveTags.map(
-                        (tag) =>
+                        (tagfreq) =>
                             <button
                                 className="
                         relative
@@ -66,11 +72,13 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
                         z-[9999999]
                         "
                                 onClick={handleClick}
-                                key={tag}
+                                key={tagfreq[0]}
                             >
-                                {tag.toLowerCase()}
+                                {tagfreq[0].toLowerCase()}
+                                {tagfreq[1]}
                             </button>
                     )
+                    // : <div>{JSON.stringify(data)}</div>
             }
         </div>
     )

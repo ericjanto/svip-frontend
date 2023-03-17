@@ -30,7 +30,7 @@ export default function SearchPage() {
 
   const tags = extractTagsFromPath(decodeURIComponent(router.asPath))
   
-  console.log(tags)
+  // console.log(tags)
   // console.log(searchQuery)
 
   var initialTags: string[] = []
@@ -52,7 +52,7 @@ export default function SearchPage() {
     url += metadata
   }
 
-  console.log(url)
+  // console.log(url)
 
   // Revalidate if more results available
   const { data, error, isLoading } = useSWR(url, fetcher, { refreshInterval: 1000 });
@@ -68,7 +68,7 @@ export default function SearchPage() {
       url += metadata
     }
 
-    console.log(url)
+    // console.log(url)
     pages.push(<ResultSetDisplayer fetchQuery={url} key={i} />)
   }
 
