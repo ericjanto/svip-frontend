@@ -14,7 +14,7 @@ type Results = {
 }[]
 
 const fetcher: Fetcher<Results> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
-const API_URL = 'http://storyhunter.live/query'
+const API_URL = 'https://storyhunter.live/query'
 // const API_URL = 'http://localhost:5006/query'
 // const API_URL = 'http://localhost:5006/query'
 
