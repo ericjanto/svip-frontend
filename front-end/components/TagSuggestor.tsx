@@ -17,7 +17,8 @@ type TagApiResults = {
 
 const fetcher: Fetcher<TagApiResults> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
 // const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/tags'
-const API_URL = 'http://localhost:5006/autocomplete'
+// const API_URL = 'http://localhost:5006/autocomplete'
+const API_URL = 'http://storyhunter.live/autocomplete'
 
 export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, currentQuery, setCurrentQuery, queryInputRef }: TagSuggestorProps) {
     // Here, make request to tag autocomplete API
