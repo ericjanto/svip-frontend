@@ -30,8 +30,11 @@ export default function ResultSetDisplayer({ fetchQuery }: ResultSetDisplayerPro
     if (data!.length > 0) {
         return (
             <>
-                {data!.map((item, index) =>
-                    <div key={index}>
+                {data!.map((item, index) => {
+                    let chapterNum = item.url.charAt(item.url.length-1)
+                    // console.log(item.excerpt)
+                    console.log(fetchQuery)
+                    return <div key={index}>
                         <a href={item.url} className='group'>
                             {/* <em>docId: {item.docId.toString()}</em> */}
                             <br />
@@ -40,10 +43,16 @@ export default function ResultSetDisplayer({ fetchQuery }: ResultSetDisplayerPro
                                 {item.title}
                             </h3>
                             <ReactMarkdown className='text-sm text-gray-800'>
-                                {highlightOccurringWords(item.excerpt, fetchQuery)}
+                                {highlightOccurringWords(item.excerpt, decodeURIComponent(fetchQuery))}
                             </ReactMarkdown>
+                            {
+                                chapterNum != '1'
+                                    ? <div className='text-sm text-red-500'>Navigate to chapter {chapterNum}</div>
+                                    : <></>
+                            }
                         </a>
                     </div>
+                }
                 )}
             </>
         )

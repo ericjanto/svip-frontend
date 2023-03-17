@@ -38,6 +38,7 @@ export function destructQuery(searchQuery: string): DestructedQuery {
 }
 
 export function highlightOccurringWords(text: string, query: string) {
+    query = query.slice(query.indexOf('q=') + 2, query.indexOf('&p'))
     var terms = query.split(/\s/g)
     if (terms.length == 0) {
         terms = query.split('%20')
