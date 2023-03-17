@@ -57,7 +57,7 @@ export function extractTagsFromPath(path: string) {
     } else {
         path = path.replace('/search/','')
         const queryTagProcessed = path.replaceAll('%20', ' ')
-        const tags = queryTagProcessed.match(/\s#(?!\d+\(\w+,\w+\))\S+|^#(?!\d+\(\w+,\w+\))\S+/g)?.map((tag: string) => { return tag.trim().replace('#', '') })
+        const tags = queryTagProcessed.match(/\s#(?!\d+\(\w+,\w+\))\S+|^#(?!\d+\(\w+,\w+\))\S+/g)?.map((tag: string) => { return tag.trim().replace('#', '').replaceAll('_',' ') })
         return tags ? tags : []
     }
 }

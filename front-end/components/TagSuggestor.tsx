@@ -11,9 +11,9 @@ type TagSuggestorProps = {
 
 type TagApiResults = {
     [key: string]: {
-      [key: string]: Array<Array<[string, number]>>
+        [key: string]: Array<Array<[string, number]>>
     }
-  }
+}
 
 const fetcher: Fetcher<TagApiResults> = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
 // const API_URL = 'https://63be76d1e348cb07620f5001.mockapi.io/api/mock/tags'
@@ -21,9 +21,9 @@ const API_URL = 'http://localhost:5006/autocomplete'
 
 export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, currentQuery, setCurrentQuery, queryInputRef }: TagSuggestorProps) {
     // Here, make request to tag autocomplete API
-    const { data, error, isLoading } = useSWR(`${API_URL}?prefix=${encodeURIComponent(currentEditedTag.replace('#',''))}`, fetcher)
+    const { data, error, isLoading } = useSWR(`${API_URL}?prefix=${encodeURIComponent(currentEditedTag.replace('#', '').replaceAll('_', ' '))}`, fetcher)
 
-    const topFiveTags: string[] = []
+    const topFiveTags: any[] = []
     if (data) {
         const arr = Object.values(data)[0]
 
@@ -31,12 +31,12 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
             topFiveTags.push(element)
         })
 
-    }   
+    }
 
     const handleClick = (e: any) => {
         // Replace query text
         const suggestedTagText = '#' + e.target.innerText
-        const updatedQuery = currentQuery.replace(currentEditedTag, suggestedTagText)
+        const updatedQuery = currentQuery.replace(currentEditedTag, suggestedTagText.replaceAll(' ','_'))
         setCurrentQuery(updatedQuery)
 
         // Focus back on query input field
@@ -51,7 +51,7 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
             {isLoading
                 ? <div className="text-sm text-gray-500 pt-[0.35rem]">Loading tag suggestions...</div>
                 : topFiveTags.length == 0
-                    ? 
+                    ?
                     <div className="text-sm">There are no similar tags!</div>
                     : topFiveTags.map(
                         (tagfreq) =>
@@ -75,10 +75,10 @@ export default function TagSuggestor({ currentEditedTag, setCurrentlyEditedTag, 
                                 key={tagfreq[0]}
                             >
                                 {tagfreq[0].toLowerCase()}
-                                {tagfreq[1]}
+                                {/* <div>{tagfreq[1]}</div> */}
                             </button>
                     )
-                    // : <div>{JSON.stringify(data)}</div>
+                // : <div>{JSON.stringify(data)}</div>
             }
         </div>
     )

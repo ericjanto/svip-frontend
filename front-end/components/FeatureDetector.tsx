@@ -23,10 +23,10 @@ export default function FeatureDetector({ searchQuery }: FeatureDetectorProps) {
             <summary>Tip: Use advanced query syntax to refine your search ({usedFeatures}/6)</summary>
             <ul className="list-disc ml-8">
                 <li className={tagUse ? "text-green-600" : ""}>
-                    Filter results with story tags:
+                    Filter results with story tags (replace underscore for whitespace):
                     <code>
                         <span className="text-blue-500"> #</span>
-                        &lt;tag&gt;
+                        &lt;tag_example&gt;
                     </code>
                 </li>
                 <li className={wildcardUse ? "text-green-600" : ""}>Use wildcard search:{' '}
