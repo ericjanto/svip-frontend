@@ -1,6 +1,42 @@
+import { useRouter } from "next/router"
+import { useState } from "react"
+
+
 export default function MetadataFilter() {
+    const router = useRouter()
+
+
+    const [formData, setFormData] = useState({})
+    const handleSubmit = (event: any) => {
+        event.preventDefault()
+
+        // Access form data using FormData API
+        const formData = new FormData(event.target)
+        const formValues = Object.fromEntries(formData.entries())
+        setFormData(formValues)
+
+        // Create query string from form data
+        const queryString = Object.keys(formValues)
+            .map(key => {
+                let value: any = formValues[key]
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+            })
+            .join('&')
+
+        let searchQuery = router.query.searchQuery
+        if (Array.isArray(searchQuery)) {
+            searchQuery = searchQuery.join('')
+        }
+
+        // Use Link component to navigate to new page with query parameters
+        const href = `/search/${encodeURIComponent(searchQuery!)}?${queryString}`
+        const as = href // Use same URL for server and client rendering
+        console.log('doing this')
+        router.push(href, as, { shallow: true }) // Navigate without full page refresh
+    }
+
     return (
-        <details className="text-sm">
+        <details className="text-sm" onSubmit={handleSubmit}>
             <summary className=" text-gray-500" >Tip: Use metadata filters for fine-tuned filtering</summary>
             <form>
                 <ul className="list-disc ml-8">
