@@ -45,7 +45,7 @@ export default function SearchPage() {
   }
   // console.log(metadata)
 
-  var url = `${API_URL}?q=${removeTags(searchQuery)}&p=${cnt}&l=15`
+  var url = `${API_URL}?q=${encodeURIComponent(removeTags(searchQuery))}&p=${cnt}&l=15`
   if (tags.length != 0) {
     url += `&tags=${tags.join(',')}`
   }
@@ -61,7 +61,7 @@ export default function SearchPage() {
 
   const pages = []
   for (let i = 1; i < cnt; i++) {
-    var url = `${API_URL}?q=${removeTags(searchQuery)}&p=${i}&l=15`
+    var url = `${API_URL}?q=${encodeURIComponent(removeTags(searchQuery))}&p=${i}&l=15`
     if (tags.length != 0) {
       url += `&tags=${tags.join(',')}`
     }
